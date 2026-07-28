@@ -16,7 +16,7 @@ async function getRecommendedRoute() {
   const gates = JSON.parse(localStorage.getItem('busanPortGates') || 'null') || defaultGates;
   result.textContent = '최적 경로를 계산하고 있습니다…';
   try {
-    const routes = await Promise.all(gates.map(async (gate) => {
+    const attempts = await Promise.allSettled(gates.map(async (gate) => {
       const response = await fetch('/api/directions', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ origin, destination: gateCoordinates[gate.id] }),
@@ -24,6 +24,8 @@ async function getRecommendedRoute() {
       if (!response.ok) throw new Error('경로 API가 아직 설정되지 않았습니다.');
       return { gate, ...(await response.json()) };
     }));
+    const routes = attempts.filter((attempt) => attempt.status === 'fulfilled').map((attempt) => attempt.value);
+    if (!routes.length) throw new Error('계산 가능한 게이트 경로가 없습니다.');
     // 이동시간을 우선으로 보고, 실측 전인 게이트 대기 예측값은 보조 점수로 반영합니다.
     const best = routes.map((route) => ({ ...route, total: Math.round(route.durationMinutes + route.gate.wait * 0.35) })).sort((a, b) => a.total - b.total)[0];
     result.textContent = `추천: ${best.gate.name} · 이동 ${best.durationMinutes}분 + 예상 게이트 대기 ${best.gate.wait}분 = 총 ${best.total}분`;
