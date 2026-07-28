@@ -24,8 +24,9 @@ async function getRecommendedRoute() {
       if (!response.ok) throw new Error('경로 API가 아직 설정되지 않았습니다.');
       return { gate, ...(await response.json()) };
     }));
-    const best = routes.map((route) => ({ ...route, total: route.durationMinutes + route.gate.wait })).sort((a, b) => a.total - b.total)[0];
-    result.textContent = `추천: ${best.gate.name} · 이동 ${best.durationMinutes}분 + 게이트 대기 ${best.gate.wait}분 = 총 ${best.total}분`;
+    // 이동시간을 우선으로 보고, 실측 전인 게이트 대기 예측값은 보조 점수로 반영합니다.
+    const best = routes.map((route) => ({ ...route, total: Math.round(route.durationMinutes + route.gate.wait * 0.35) })).sort((a, b) => a.total - b.total)[0];
+    result.textContent = `추천: ${best.gate.name} · 이동 ${best.durationMinutes}분 + 예상 게이트 대기 ${best.gate.wait}분 = 총 ${best.total}분`;
     document.getElementById('recommendationTitle').textContent = `${best.gate.name}로 이동하세요`;
     window.drawRecommendedRoute?.(best.path);
   } catch (error) {
@@ -39,6 +40,8 @@ window.setAppOrigin = (latitude, longitude, message = '현재 위치를 입력�
   document.getElementById('recommendationTitle').textContent = '현재 위치를 확인했습니다';
   document.getElementById('driverMapHint').textContent = message;
   document.getElementById('routeResult').textContent = '현재 위치가 설정되었습니다. 추천 경로 화면에서 경로 계산을 눌러주세요.';
+  // 지도에서 위치를 누르거나 GPS 위치를 받으면 즉시 세 게이트 경로를 다시 계산합니다.
+  setTimeout(getRecommendedRoute, 0);
 };
 
 document.getElementById('routeSearchButton')?.addEventListener('click', getRecommendedRoute);
