@@ -26,9 +26,10 @@ async function getRecommendedRoute() {
     }));
     const routes = attempts.filter((attempt) => attempt.status === 'fulfilled').map((attempt) => attempt.value);
     if (!routes.length) throw new Error('계산 가능한 게이트 경로가 없습니다.');
-    // 이동시간을 우선으로 보고, 실측 전인 게이트 대기 예측값은 보조 점수로 반영합니다.
-    const best = routes.map((route) => ({ ...route, total: Math.round(route.durationMinutes + route.gate.wait * 0.35) })).sort((a, b) => a.total - b.total)[0];
-    result.textContent = `추천: ${best.gate.name} · 이동 ${best.durationMinutes}분 + 예상 게이트 대기 ${best.gate.wait}분 = 총 ${best.total}분`;
+    window.gateTravelTimes = Object.fromEntries(routes.map((route) => [route.gate.id, route.durationMinutes]));
+    window.renderGates?.();
+    const best = [...routes].sort((a, b) => a.durationMinutes - b.durationMinutes)[0];
+    result.textContent = `최적 경로: ${best.gate.name} · 약 ${best.durationMinutes}분 소요`;
     document.getElementById('recommendationTitle').textContent = `${best.gate.name}로 이동하세요`;
     window.drawRecommendedRoute?.(best.path);
   } catch (error) {
