@@ -1,7 +1,7 @@
 const toast = document.getElementById('toast');
 const defaultGates = [
-  { id: 'north', name: '북항 게이트', wait: 45, vehicles: 38, available: false },
-  { id: 'sinseondae', name: '신선대 게이트', wait: 20, vehicles: 17, available: true },
+  { id: 'north', name: '북항 게이트', wait: 12, vehicles: 14, available: true },
+  { id: 'sinseondae', name: '신선대 게이트', wait: 8, vehicles: 9, available: true },
   { id: 'gamman', name: '감만부두 게이트', wait: 5, vehicles: 4, available: true },
 ];
 function getGates() { return JSON.parse(localStorage.getItem('busanPortGates') || 'null') || defaultGates; }
@@ -18,7 +18,7 @@ function renderGates() {
   document.getElementById('gateCards').innerHTML = getGates().map((gate) => {
     const color = gate.wait > 30 ? 'red' : gate.wait >= 10 ? 'yellow' : 'green';
     const label = gate.wait > 30 ? '혼잡' : gate.wait >= 10 ? '주의' : '원활';
-    return `<article class="app-gate-card"><span class="status-dot ${color}"></span><div><small>${label}</small><h3>${gate.name}</h3><p>대기 차량 ${gate.vehicles}대</p></div><strong>${gate.wait}<em>분</em></strong></article>`;
+    return `<article class="app-gate-card"><span class="status-dot ${color}"></span><div><small>${label} · 예상</small><h3>${gate.name}</h3><p>예상 대기 차량 ${gate.vehicles}대</p></div><strong>${gate.wait}<em>분</em></strong></article>`;
   }).join('');
 }
 renderGates();
