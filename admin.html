@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Busan Port Flow | 게이트 관리자</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark">BP</span><span>BUSAN PORT<br /><strong>FLOW</strong></span></a>
+      <a class="admin-link" href="index.html">시민·기사 화면 보기 →</a>
+    </header>
+    <main class="page admin-page">
+      <section class="section-heading"><div><p class="eyebrow">GATE OPERATION</p><h1>게이트 상태 관리</h1></div><p>저장하면 기사 화면에 즉시 반영됩니다.</p></section>
+      <form id="gateForm" class="admin-form">
+        <div id="gateFields" class="admin-grid"></div>
+        <button class="save-button" type="submit">게이트 상태 저장</button>
+        <p id="saveMessage" class="save-message" role="status"></p>
+      </form>
+      <article class="tip-banner"><span>ℹ️</span><p>현재는 현장 운영자가 입력하는 방식입니다. BPA/터미널과 데이터 연계가 되면 이 입력값을 실시간 게이트 API 값으로 자동 교체합니다.</p></article>
+    </main>
+    <script src="admin.js"></script>
+  </body>
+</html>

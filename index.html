@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#102b4e" /><meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="manifest.webmanifest" /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /><link rel="stylesheet" href="style.css" />
+    <title>Busan Port Flow</title>
+  </head>
+  <body class="app-body">
+    <main class="app-shell">
+      <header class="app-header"><a class="brand" href="#"><span class="brand-mark">BP</span><span>BUSAN PORT<br /><strong>FLOW</strong></span></a><span class="app-live"><i></i> 실시간</span></header>
+
+      <section id="locationScreen" class="app-screen active" aria-label="내 위치 탐색">
+        <div class="app-title"><p>STEP 1</p><h1>현재 위치를<br />확인하세요</h1><span>내 위치를 기준으로 가장 빠른 게이트를 찾습니다.</span></div>
+        <div class="location-map-wrap"><div id="driverMap" aria-label="현재 위치와 부산항 게이트 지도"></div><div class="map-location-caption"><b>부산항 게이트</b><small>빨강 혼잡 · 노랑 주의 · 초록 원활</small></div><button id="locationButton" class="main-location-button" type="button">◎ 내 위치 탐색하기</button></div>
+        <p id="driverMapHint" class="location-hint">버튼을 누르고 위치 권한을 허용하세요.</p>
+        <button id="toRouteButton" class="next-screen-button" type="button">추천 경로 보기 <span>→</span></button>
+      </section>
+
+      <section id="routeScreen" class="app-screen" hidden aria-label="추천 경로">
+        <div class="app-title route-title"><p>STEP 2</p><h1>추천<br />게이트 경로</h1><span>이동시간과 게이트 대기시간을 함께 계산합니다.</span></div>
+        <div id="routeMap" class="route-map" aria-label="추천 경로 지도"></div>
+        <article class="route-result-card"><p>가장 빠른 선택</p><h2 id="recommendationTitle">내 위치를 먼저 확인하세요</h2><p id="routeResult">첫 화면에서 내 위치 탐색하기를 눌러주세요.</p></article>
+        <div id="gateCards" class="app-gate-list"></div>
+        <div class="route-actions"><input id="originInput" value="129.045,35.105" aria-label="출발지 좌표" /><button id="routeSearchButton" type="button">실시간 경로 계산</button></div>
+        <button id="backToLocationButton" class="back-screen-button" type="button">← 내 위치 다시 찾기</button>
+      </section>
+    </main>
+    <nav class="app-bottom-nav" aria-label="앱 화면 선택"><button class="app-nav active" data-screen="location">◎<span>내 위치</span></button><button class="app-nav" data-screen="route">⌁<span>추천 경로</span></button></nav>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="script.js"></script><script src="map-service.js"></script><script src="data-service.js"></script><script src="route-service.js"></script>
+    <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js');</script>
+  </body>
+</html>
