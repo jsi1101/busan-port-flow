@@ -11,16 +11,14 @@ function showScreen(name) {
   document.querySelectorAll('.app-screen').forEach((screen) => screen.classList.toggle('active', screen.id === `${name}Screen`));
   document.querySelectorAll('.app-nav').forEach((button) => button.classList.toggle('active', button.dataset.screen === name));
   if (name === 'location') setTimeout(() => driverMap.invalidateSize(), 0);
-  if (name === 'route') setTimeout(() => window.refreshRouteMap?.(), 0);
+  if (name === 'route') setTimeout(() => { window.refreshRouteMap?.(); window.getRecommendedRoute?.(); }, 0);
 }
 window.navigateAppScreen = showScreen;
 function renderGates() {
   document.getElementById('gateCards').innerHTML = getGates().map((gate) => {
     const estimate = window.gateEstimates?.[gate.id];
-    const color = gate.wait > 30 ? 'red' : gate.wait >= 10 ? 'yellow' : 'green';
-    const label = gate.wait > 30 ? '혼잡' : gate.wait >= 10 ? '주의' : '원활';
     const isBest = window.bestGateId === gate.id;
-    return `<article class="app-gate-card" style="${isBest ? 'border:2px solid #1576d2;background:#eef7ff;' : ''}"><span class="status-dot ${color}"></span><div><small>${isBest ? '★ 최적 경로' : label}</small><h3>${gate.name}</h3><p>${estimate ? `이동 ${estimate.duration}분 + 예상 대기 ${estimate.wait}분` : '위치를 설정하면 총 소요시간을 계산합니다'}</p></div><strong>${estimate ? estimate.total : '-'}<em>${estimate ? '분' : ''}</em></strong></article>`;
+    return `<article class="app-gate-card" style="${isBest ? 'border:2px solid #1576d2;background:#eef7ff;' : ''}"><div><small>${isBest ? '★ 최적 경로' : ''}</small><h3>${gate.name}</h3><p>${estimate ? `이동 ${estimate.duration}분 + 예상 대기 ${estimate.wait}분` : '위치를 설정하면 총 소요시간을 계산합니다'}</p></div><strong>${estimate ? estimate.total : '-'}<em>${estimate ? '분' : ''}</em></strong></article>`;
   }).join('');
 }
 window.renderGates = renderGates;
