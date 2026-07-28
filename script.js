@@ -16,11 +16,11 @@ function showScreen(name) {
 window.navigateAppScreen = showScreen;
 function renderGates() {
   document.getElementById('gateCards').innerHTML = getGates().map((gate) => {
-    const travelMinutes = window.gateTravelTimes?.[gate.id];
+    const estimate = window.gateEstimates?.[gate.id];
     const color = gate.wait > 30 ? 'red' : gate.wait >= 10 ? 'yellow' : 'green';
     const label = gate.wait > 30 ? '혼잡' : gate.wait >= 10 ? '주의' : '원활';
-    const minutes = Number.isFinite(travelMinutes) ? travelMinutes : null;
-    return `<article class="app-gate-card"><span class="status-dot ${color}"></span><div><small>${label}</small><h3>${gate.name}</h3><p>${minutes === null ? '위치를 설정하면 이동시간을 계산합니다' : '현재 위치 기준 이동시간'}</p></div><strong>${minutes ?? '-'}<em>${minutes === null ? '' : '분'}</em></strong></article>`;
+    const isBest = window.bestGateId === gate.id;
+    return `<article class="app-gate-card" style="${isBest ? 'border:2px solid #1576d2;background:#eef7ff;' : ''}"><span class="status-dot ${color}"></span><div><small>${isBest ? '★ 최적 경로' : label}</small><h3>${gate.name}</h3><p>${estimate ? `이동 ${estimate.duration}분 + 예상 대기 ${estimate.wait}분` : '위치를 설정하면 총 소요시간을 계산합니다'}</p></div><strong>${estimate ? estimate.total : '-'}<em>${estimate ? '분' : ''}</em></strong></article>`;
   }).join('');
 }
 window.renderGates = renderGates;
