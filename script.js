@@ -60,8 +60,27 @@ setTimeout(() => {
     alert('\ud604\uc7a5 \uc81c\ubcf4\uac00 \ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4.');
   };
   renderReports();
-  setInterval(() => { if (!document.getElementById('reportScreen').hidden) renderReports(); }, 30000);
+setInterval(() => { if (!document.getElementById('reportScreen').hidden) renderReports(); }, 30000);
 }, 0);
+function formatRouteMinutes(minutes) {
+  const value = Number(minutes) || 0;
+  if (value < 60) return `${value}\ubd84`;
+  return `${Math.floor(value / 60)}\uc2dc\uac04 ${value % 60}\ubd84`;
+}
+window.renderGates = () => {
+  const gates = getGates();
+  const best = gates.find((gate) => gate.id === window.bestGateId);
+  const ordered = best ? [best, ...gates.filter((gate) => gate.id !== best.id)] : gates;
+  document.getElementById('gateCards').innerHTML = ordered.map((gate) => {
+    const estimate = window.gateEstimates?.[gate.id];
+    const isBest = window.bestGateId === gate.id;
+    const selected = window.selectedGateId === gate.id;
+    const label = isBest ? '\u2605 \ucd5c\uc801 \uacbd\ub85c' : selected ? '\u2713 \uc120\ud0dd\ud55c \uae38\uc548\ub0b4' : '\ud0ed\ud558\uc5ec \uc774 \uac8c\uc774\ud2b8 \uc120\ud0dd';
+    const detail = estimate ? `\uc774\ub3d9 ${formatRouteMinutes(estimate.duration)} + \uc608\uc0c1 \ub300\uae30 ${formatRouteMinutes(estimate.wait)}` : '\uc704\uce58\ub97c \uc124\uc815\ud558\uba74 \uc608\uc0c1 \uc2dc\uac04\uc744 \uacc4\uc0b0\ud569\ub2c8\ub2e4.';
+    return `<article class="app-gate-card" data-gate-id="${gate.id}" style="cursor:pointer;${selected ? 'border:3px solid #102b4e;background:#eaf5ff;' : isBest ? 'border:2px solid #1576d2;background:#eef7ff;' : ''}"><div><small>${label}</small><h3>${gate.name}</h3><p>${detail}</p>${estimate?.cityBenefit ? `<p class="city-benefit">${estimate.cityBenefit}</p>` : ''}</div><strong>${estimate ? formatRouteMinutes(estimate.total) : '-'}</strong></article>`;
+  }).join('');
+  document.querySelectorAll('[data-gate-id]').forEach((card) => card.onclick = () => window.selectGateRoute?.(card.dataset.gateId));
+};
 let selectedReportGate = '', selectedReportType = '';
 document.querySelectorAll('.report-gate').forEach((button) => button.onclick = () => { selectedReportGate = button.dataset.gate; document.querySelectorAll('.report-gate').forEach((item) => item.style.cssText=''); button.style.cssText='background:#eaf5ff;color:#1576d2;border-color:#1576d2'; });
 document.querySelectorAll('.report-type').forEach((button) => button.onclick = () => { selectedReportType = button.dataset.report; document.getElementById('customReportInput').style.display = selectedReportType === '기타' ? 'block' : 'none'; });
