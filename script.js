@@ -7,6 +7,7 @@ const defaultGates = [
 function getGates() { return JSON.parse(localStorage.getItem('busanPortGates') || 'null') || defaultGates; }
 function showScreen(name) {
   document.getElementById('homeScreen').hidden = name !== 'home';
+  document.getElementById('noticeScreen').hidden = name !== 'notice';
   document.getElementById('locationScreen').hidden = name !== 'location';
   document.getElementById('routeScreen').hidden = name !== 'route';
   document.querySelectorAll('.app-screen').forEach((screen) => screen.classList.toggle('active', screen.id === `${name}Screen`));
@@ -27,8 +28,7 @@ renderGates();
 document.querySelectorAll('.app-nav').forEach((button) => button.addEventListener('click', () => showScreen(button.dataset.screen)));
 document.getElementById('startRouteButton').addEventListener('click', () => showScreen('location'));
 document.getElementById('noticeButton').addEventListener('click', () => {
-  const panel = document.getElementById('noticePanel');
-  panel.hidden = !panel.hidden;
+  showScreen('notice');
 });
 document.querySelectorAll('.home-return').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.getElementById('toRouteButton').addEventListener('click', () => showScreen('route'));
