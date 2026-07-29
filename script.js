@@ -81,6 +81,16 @@ window.renderGates = () => {
   }).join('');
   document.querySelectorAll('[data-gate-id]').forEach((card) => card.onclick = () => window.selectGateRoute?.(card.dataset.gateId));
 };
+document.addEventListener('click', (event) => {
+  const typeButton = event.target.closest('.report-type');
+  if (!typeButton) return;
+  document.querySelectorAll('.report-type').forEach((button) => button.style.cssText = '');
+  typeButton.style.cssText = 'background:#eaf5ff;color:#1576d2;border:2px solid #1576d2;font-weight:800';
+  const input = document.getElementById('customReportInput');
+  const other = /\uae30\ud0c0|\uc9c1\uc811/.test(typeButton.textContent);
+  input.style.display = other ? 'block' : 'none';
+  if (other) input.focus();
+}, true);
 let selectedReportGate = '', selectedReportType = '';
 document.querySelectorAll('.report-gate').forEach((button) => button.onclick = () => { selectedReportGate = button.dataset.gate; document.querySelectorAll('.report-gate').forEach((item) => item.style.cssText=''); button.style.cssText='background:#eaf5ff;color:#1576d2;border-color:#1576d2'; });
 document.querySelectorAll('.report-type').forEach((button) => button.onclick = () => { selectedReportType = button.dataset.report; document.getElementById('customReportInput').style.display = selectedReportType === '기타' ? 'block' : 'none'; });
