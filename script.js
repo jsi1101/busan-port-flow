@@ -39,7 +39,7 @@ function getReports() {
     if (report.reportedAt) return report;
     const minutes = Number(String(report.time || '').match(/\d+/)?.[0]) || 0;
     return { ...report, reportedAt: Date.now() - minutes * 60000 };
-  });
+  }).sort((a, b) => b.reportedAt - a.reportedAt);
 }
 function renderReports() { document.getElementById('reportFeed').innerHTML = getReports().map((report) => `<article style="padding-top:11px;border-top:1px solid #e5ebf1"><b style="display:block;font-size:14px;color:#102b4e">${report.message}</b><small style="display:block;margin-top:4px;color:#68778a">부산항 이용 기사 · ${report.time}</small></article>`).join(''); }
 function relativeReportTime(reportedAt, fallback) {
