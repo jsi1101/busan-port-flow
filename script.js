@@ -8,6 +8,7 @@ function getGates() { return JSON.parse(localStorage.getItem('busanPortGates') |
 function showScreen(name) {
   document.getElementById('homeScreen').hidden = name !== 'home';
   document.getElementById('noticeScreen').hidden = name !== 'notice';
+  document.getElementById('reportScreen').hidden = name !== 'report';
   document.getElementById('locationScreen').hidden = name !== 'location';
   document.getElementById('routeScreen').hidden = name !== 'route';
   document.getElementById('navigationScreen').hidden = name !== 'navigation';
@@ -16,6 +17,7 @@ function showScreen(name) {
   if (name === 'location') setTimeout(() => driverMap.invalidateSize(), 0);
   if (name === 'route') setTimeout(() => { window.refreshRouteMap?.(); window.getRecommendedRoute?.(); }, 0);
   if (name === 'navigation') setTimeout(() => window.showNavigationGuide?.(), 0);
+  if (name === 'report') renderReports();
 }
 window.navigateAppScreen = showScreen;
 function renderGates() {
@@ -32,6 +34,22 @@ document.getElementById('startRouteButton').addEventListener('click', () => show
 document.getElementById('noticeButton').addEventListener('click', () => {
   showScreen('notice');
 });
+const defaultReports = [
+  { message: '신선대부두 진입로 대기줄이 길어지고 있습니다.', time: '7분 전' },
+  { message: '감만부두 게이트 앞 도로 흐름은 현재 원활합니다.', time: '18분 전' },
+];
+function getReports() { return JSON.parse(localStorage.getItem('busanPortReports') || 'null') || defaultReports; }
+function renderReports() {
+  document.getElementById('reportFeed').innerHTML = getReports().map((report) => `<article style="padding-top:11px;border-top:1px solid #e5ebf1"><b style="display:block;font-size:14px;color:#102b4e">${report.message}</b><small style="display:block;margin-top:4px;color:#68778a">부산항 이용 기사 · ${report.time}</small></article>`).join('');
+}
+document.getElementById('reportButton').addEventListener('click', () => showScreen('report'));
+document.querySelectorAll('.report-type').forEach((button) => button.addEventListener('click', () => {
+  const reports = getReports();
+  reports.unshift({ message: button.dataset.report, time: '방금 전' });
+  localStorage.setItem('busanPortReports', JSON.stringify(reports.slice(0, 6)));
+  renderReports();
+  alert('현장 제보가 등록되었습니다. 다른 기사에게 공유됩니다.');
+}));
 document.querySelectorAll('.home-return').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.getElementById('toRouteButton').addEventListener('click', () => showScreen('route'));
 document.getElementById('backToLocationButton').addEventListener('click', () => showScreen('location'));
