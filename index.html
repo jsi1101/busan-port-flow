@@ -68,6 +68,11 @@
 
       <section id="routeScreen" class="app-screen" hidden aria-label="추천 경로">
         <div class="app-title route-title"><p>STEP 2</p><h1>추천<br />게이트 경로</h1><span>실시간 이동시간과 예상 게이트 대기시간을 함께 계산합니다.</span></div>
+        <div class="route-mode" role="group" aria-label="경로 우선순위">
+          <button class="route-mode-button active" data-route-mode="fast" type="button">가장 빠른 길</button>
+          <button class="route-mode-button" data-route-mode="city" type="button">도심 진입 최소화</button>
+        </div>
+        <p id="routeModeDescription" class="route-mode-description">이동시간과 게이트 대기시간이 가장 짧은 경로를 추천합니다.</p>
         <div id="routeMap" class="route-map" aria-label="추천 경로 지도"></div>
         <p id="routeResult" hidden></p><h2 id="recommendationTitle" hidden></h2>
         <div id="gateCards" class="app-gate-list"></div>
