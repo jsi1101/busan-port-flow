@@ -49,9 +49,11 @@ function clear(lines) {
 function trafficPath(map, points, isNavigation = false) {
   const lines = clear(isNavigation ? navigationLines : routeLines);
   const palette = ['#28a86b', '#f4ad32', '#eb4b4b'];
-  for (let index = 0; index < points.length - 1; index += 1) {
-    lines.push(L.polyline([points[index], points[index + 1]], {
-      color: palette[Math.min(index, palette.length - 1)],
+  const chunkSize = Math.max(1, Math.ceil((points.length - 1) / 3));
+  for (let index = 0; index < points.length - 1; index += chunkSize) {
+    const section = points.slice(index, Math.min(points.length, index + chunkSize + 1));
+    lines.push(L.polyline(section, {
+      color: palette[Math.min(Math.floor(index / chunkSize), palette.length - 1)],
       weight: isNavigation ? 9 : 6,
       opacity: 0.95
     }).addTo(map));
@@ -60,6 +62,16 @@ function trafficPath(map, points, isNavigation = false) {
   else routeLines = lines;
   const group = L.featureGroup(lines);
   if (lines.length) map.fitBounds(group.getBounds(), { padding: [28, 28] });
+}
+
+async function roadPath(start, end) {
+  try {
+    const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`);
+    const data = await response.json();
+    const coordinates = data.routes?.[0]?.geometry?.coordinates;
+    if (coordinates?.length > 1) return coordinates.map(([lng, lat]) => [lat, lng]);
+  } catch (_) { /* offline fallback below */ }
+  return [start, [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2], end];
 }
 
 function setCurrentLocation(lat, lng, followNavigation = false) {
@@ -73,10 +85,9 @@ function setCurrentLocation(lat, lng, followNavigation = false) {
   if (followNavigation) navigationMap.flyTo(point, 14, { animate: true, duration: 0.7 });
 }
 
-function navigationRoute(gate, start, fit = true) {
-  const first = [(start[0] * 2 + gate.point[0]) / 3, (start[1] * 2 + gate.point[1]) / 3];
-  const second = [(start[0] + gate.point[0] * 2) / 3, (start[1] + gate.point[1] * 2) / 3];
-  trafficPath(navigationMap, [start, first, second, gate.point], true);
+async function navigationRoute(gate, start, fit = true) {
+  const points = await roadPath(start, gate.point);
+  trafficPath(navigationMap, points, true);
   if (!fit) navigationMap.panTo(start, { animate: true });
 }
 
@@ -91,12 +102,11 @@ window.updateDriverMapPosition = (lat, lng) => {
   driverMap.flyTo([lat, lng], 12);
 };
 
-window.drawRecommendedRoute = (vertices) => {
+window.drawRecommendedRoute = async (vertices) => {
   if (!vertices?.length) return;
   const start = [vertices[1], vertices[0]];
   const end = [vertices[vertices.length - 1], vertices[vertices.length - 2]];
-  const middle = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
-  trafficPath(routeMap, [start, middle, end]);
+  trafficPath(routeMap, await roadPath(start, end));
 };
 
 window.startLiveNavigation = () => {
