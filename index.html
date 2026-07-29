@@ -42,7 +42,16 @@
         <p id="routeResult" hidden></p><h2 id="recommendationTitle" hidden></h2>
         <div id="gateCards" class="app-gate-list"></div>
         <div class="route-actions"><input id="originInput" value="129.045,35.105" aria-label="출발지 좌표" /><button id="routeSearchButton" type="button">실시간 경로 계산</button></div>
+        <button id="startNavigationButton" class="next-screen-button" type="button" style="margin-top:12px">길안내 시작 <span>→</span></button>
         <button id="backToLocationButton" class="back-screen-button" type="button">← 내 위치 다시 찾기</button>
+        <button class="back-screen-button home-return" type="button">⌂ 홈으로</button>
+      </section>
+      <section id="navigationScreen" class="app-screen" hidden aria-label="길안내">
+        <div class="app-title route-title"><p>STEP 3</p><h1>길안내</h1><span id="navigationSubtitle">추천 게이트까지 안전하게 이동하세요.</span></div>
+        <div id="navigationMap" class="route-map" aria-label="길안내 지도"></div>
+        <div class="route-result-card"><p>목적지 게이트</p><h2 id="navigationGateName">게이트를 계산 중입니다</h2><p id="navigationSummary">STEP 2에서 경로를 계산하면 예상 소요시간이 표시됩니다.</p></div>
+        <div class="navigation-tip" style="display:flex;gap:12px;align-items:center;margin-top:15px;padding:16px;border-radius:15px;background:#eaf5ff;color:#102b4e"><b style="font-size:14px;white-space:nowrap">다음 안내</b><span id="navigationInstruction" style="font-size:13px;line-height:1.5">직진 후 부산항 방면으로 이동하세요.</span></div>
+        <button id="backToRouteButton" class="back-screen-button" type="button">← 추천 경로 다시 보기</button>
         <button class="back-screen-button home-return" type="button">⌂ 홈으로</button>
       </section>
     </main>
