@@ -10,10 +10,12 @@ function showScreen(name) {
   document.getElementById('noticeScreen').hidden = name !== 'notice';
   document.getElementById('locationScreen').hidden = name !== 'location';
   document.getElementById('routeScreen').hidden = name !== 'route';
+  document.getElementById('navigationScreen').hidden = name !== 'navigation';
   document.querySelectorAll('.app-screen').forEach((screen) => screen.classList.toggle('active', screen.id === `${name}Screen`));
   document.querySelectorAll('.app-nav').forEach((button) => button.classList.toggle('active', button.dataset.screen === name));
   if (name === 'location') setTimeout(() => driverMap.invalidateSize(), 0);
   if (name === 'route') setTimeout(() => { window.refreshRouteMap?.(); window.getRecommendedRoute?.(); }, 0);
+  if (name === 'navigation') setTimeout(() => window.showNavigationGuide?.(), 0);
 }
 window.navigateAppScreen = showScreen;
 function renderGates() {
@@ -33,3 +35,5 @@ document.getElementById('noticeButton').addEventListener('click', () => {
 document.querySelectorAll('.home-return').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.getElementById('toRouteButton').addEventListener('click', () => showScreen('route'));
 document.getElementById('backToLocationButton').addEventListener('click', () => showScreen('location'));
+document.getElementById('startNavigationButton').addEventListener('click', () => showScreen('navigation'));
+document.getElementById('backToRouteButton').addEventListener('click', () => showScreen('route'));
