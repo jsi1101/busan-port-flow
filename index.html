@@ -5,25 +5,26 @@
     <meta name="theme-color" content="#102b4e" /><meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="manifest" href="manifest.webmanifest" /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /><link rel="stylesheet" href="style.css" /><link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /><link rel="stylesheet" href="style.css" />
     <title>Busan Port Flow</title>
-  </head>
+  <style>.home-hero{padding:25px 3px 10px}.home-hero p{margin:0 0 8px;color:#1576d2;font-size:11px;font-weight:800;letter-spacing:1.5px}.home-hero h1{margin:0;font-size:34px;line-height:1.2;letter-spacing:-2px}.home-hero span{display:block;margin-top:13px;color:#637486;font-size:13px;line-height:1.65}.home-visual{display:flex;flex-direction:column;justify-content:center;align-items:center;height:210px;margin:23px 0;border-radius:22px;color:#fff;background:linear-gradient(135deg,#102b4e,#1e78ba);box-shadow:0 10px 24px #163c5b35}.home-visual span{font-size:55px}.home-visual b{margin-top:8px;font-size:20px}.home-visual small{margin-top:4px;color:#b9dfff;letter-spacing:1.5px}.home-primary,.home-secondary{width:100%;border-radius:13px;padding:16px;font:800 15px 'Noto Sans KR',sans-serif;cursor:pointer}.home-primary{border:0;background:#1576d2;color:#fff}.home-primary span{float:right;font-size:19px}.home-secondary{margin-top:10px;border:1px solid #b9cce0;background:#fff;color:#102b4e}.home-note{margin-top:18px;padding:15px;border-radius:14px;background:#e8f3fd;color:#102b4e}.home-note p{margin:5px 0 0;color:#637486;font-size:12px;line-height:1.5}</style></head>
   <body class="app-body">
     <main class="app-shell">
-      <section id="homeScreen" class="app-screen active" aria-label="홈">
+<header class="app-header"><a class="brand" href="#"><span class="brand-mark">BP</span><span>BUSAN PORT<br /><strong>FLOW</strong></span></a><span class="app-live"><i></i> 실시간</span></header>
+<section id="homeScreen" class="app-screen active" aria-label="홈" style="padding-top:34px">
         <div class="home-hero"><p>BUSAN PORT FLOW</p><h1>부산항 트럭<br />스마트 진입 안내</h1><span>현재 위치와 교통 상황을 바탕으로<br />가장 효율적인 게이트 경로를 안내합니다.</span></div>
-        <div class="home-visual"><span>⚓</span><b>부산항 물류 흐름 안내</b><small>TRUCK FLOW GUIDE</small></div>
-        <button id="startRouteButton" class="home-primary" type="button">최적 경로 찾기 <span>→</span></button>
-        <button id="noticeButton" class="home-secondary" type="button">게이트 운영 공지</button>
+        <div class="home-visual" style="box-shadow:0 7px 22px #17395c24"><span>⚓</span><b>부산항 물류 흐름 안내</b><small>TRUCK FLOW GUIDE</small></div>
+        <button id="startRouteButton" class="next-screen-button" type="button">최적 경로 찾기 <span>→</span></button>
+        <button id="noticeButton" class="back-screen-button" type="button" style="margin-top:10px">게이트 운영 공지</button>
         <div id="noticePanel" class="home-note" hidden><b>게이트 운영 공지</b><p>현재 등록된 긴급 공지사항이 없습니다.<br />게이트 점검·차단·혼잡 안내는 이곳에 표시됩니다.</p></div>
       </section>
-      <header class="app-header"><a class="brand" href="#"><span class="brand-mark">BP</span><span>BUSAN PORT<br /><strong>FLOW</strong></span></a><span class="app-live"><i></i> 실시간</span></header>
 
       <section id="locationScreen" class="app-screen" hidden aria-label="내 위치 탐색">
         <div class="app-title"><p>STEP 1</p><h1>현재 위치를<br />확인하세요</h1><span>내 위치를 기준으로 가장 빠른 게이트를 찾습니다.</span></div>
         <div class="location-map-wrap"><div id="driverMap" aria-label="현재 위치와 부산항 게이트 지도"></div><div class="map-location-caption"><b>부산항 게이트</b><small>지도를 눌러 출발 위치를 직접 설정할 수 있어요</small></div><button id="locationButton" class="main-location-button" type="button">◎ 내 위치 탐색하기</button></div>
         <p id="driverMapHint" class="location-hint">버튼을 누르고 위치 권한을 허용하세요. 또는 지도에서 출발 위치를 직접 누를 수 있어요.</p>
         <button id="toRouteButton" class="next-screen-button" type="button">추천 경로 보기 <span>→</span></button>
+        <button class="back-screen-button home-return" type="button">⌂ 홈으로</button>
       </section>
 
       <section id="routeScreen" class="app-screen" hidden aria-label="추천 경로">
@@ -33,6 +34,7 @@
         <div id="gateCards" class="app-gate-list"></div>
         <div class="route-actions"><input id="originInput" value="129.045,35.105" aria-label="출발지 좌표" /><button id="routeSearchButton" type="button">실시간 경로 계산</button></div>
         <button id="backToLocationButton" class="back-screen-button" type="button">← 내 위치 다시 찾기</button>
+        <button class="back-screen-button home-return" type="button">⌂ 홈으로</button>
       </section>
     </main>
     <nav class="app-bottom-nav" aria-label="앱 화면 선택"><button class="app-nav active" data-screen="location">◎<span>내 위치</span></button><button class="app-nav" data-screen="route">⌁<span>추천 경로</span></button></nav>
