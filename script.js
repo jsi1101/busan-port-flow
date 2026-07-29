@@ -15,7 +15,13 @@ function showScreen(name) {
 }
 window.navigateAppScreen = showScreen;
 function renderGates() { document.getElementById('gateCards').innerHTML = getGates().map((gate) => { const estimate = window.gateEstimates?.[gate.id]; const best = window.bestGateId === gate.id; const selected = window.selectedGateId === gate.id; const label = `${best ? '★ 최적 경로' : ''}${best && selected ? ' · ' : ''}${selected ? '✓ 선택한 길안내' : ''}${!best && !selected ? '탭하여 이 게이트 선택' : ''}`; const cityBenefit = estimate?.cityBenefit ? `<p class="city-benefit">${estimate.cityBenefit}</p>` : ''; return `<article class="app-gate-card" data-gate-id="${gate.id}" style="cursor:pointer;${selected ? 'border:3px solid #102b4e;background:#eaf5ff;' : best ? 'border:2px solid #1576d2;background:#eef7ff;' : ''}"><div><small>${label}</small><h3>${gate.name}</h3><p>${estimate ? `이동 ${estimate.duration}분 + 예상 대기 ${estimate.wait}분` : '위치를 설정하면 총 소요시간을 계산합니다'}</p>${cityBenefit}</div><strong>${estimate ? estimate.total : '-'}<em>${estimate ? '분' : ''}</em></strong></article>`; }).join(''); document.querySelectorAll('[data-gate-id]').forEach((card) => card.onclick = () => window.selectGateRoute?.(card.dataset.gateId)); }
-window.renderGates = renderGates; renderGates();
+const renderGateCards = renderGates;
+function renderGatesOrdered() {
+  renderGateCards();
+  const bestCard = document.querySelector(`[data-gate-id="${window.bestGateId}"]`);
+  if (bestCard) document.getElementById('gateCards').prepend(bestCard);
+}
+window.renderGates = renderGatesOrdered; renderGatesOrdered();
 document.getElementById('startRouteButton').onclick = () => showScreen('location');
 document.getElementById('noticeButton').onclick = () => showScreen('notice');
 document.getElementById('reportButton').onclick = () => showScreen('report');
