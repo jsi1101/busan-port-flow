@@ -40,7 +40,7 @@ function relativeReportTime(reportedAt, fallback) {
   const minutes = Math.max(0, Math.floor((Date.now() - reportedAt) / 60000));
   if (minutes < 1) return '\ubc29\uae08 \uc804';
   if (minutes < 60) return `${minutes}\ubd84 \uc804`;
-  if (minutes < 1440) return `${Math.floor(minutes / 60)}\uc2dc\uac04 \uc804`;
+  if (minutes < 1440) return `${Math.floor(minutes / 60)}\uc2dc\uac04 ${minutes % 60}\ubd84 \uc804`;
   return `${Math.floor(minutes / 1440)}\uc77c \uc804`;
 }
 setTimeout(() => {
