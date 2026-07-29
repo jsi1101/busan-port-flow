@@ -33,7 +33,14 @@ document.getElementById('startNavigationButton').onclick = () => showScreen('nav
 document.getElementById('backToRouteButton').onclick = () => showScreen('route');
 document.querySelectorAll('.home-return').forEach((button) => button.onclick = () => showScreen('home'));
 const defaultReports = [{ message: '[BPT 신선대부두] 진입로 대기줄이 길어지고 있습니다.', time: '7분 전' },{ message: '[BPT 감만부두] 게이트 앞 도로 흐름이 원활합니다.', time: '18분 전' }];
-function getReports() { return JSON.parse(localStorage.getItem('busanPortReports') || 'null') || defaultReports; }
+function getReports() {
+  const reports = JSON.parse(localStorage.getItem('busanPortReports') || 'null') || defaultReports;
+  return reports.map((report) => {
+    if (report.reportedAt) return report;
+    const minutes = Number(String(report.time || '').match(/\d+/)?.[0]) || 0;
+    return { ...report, reportedAt: Date.now() - minutes * 60000 };
+  });
+}
 function renderReports() { document.getElementById('reportFeed').innerHTML = getReports().map((report) => `<article style="padding-top:11px;border-top:1px solid #e5ebf1"><b style="display:block;font-size:14px;color:#102b4e">${report.message}</b><small style="display:block;margin-top:4px;color:#68778a">부산항 이용 기사 · ${report.time}</small></article>`).join(''); }
 function relativeReportTime(reportedAt, fallback) {
   if (!reportedAt) return fallback || '\ucd5c\uadfc';
