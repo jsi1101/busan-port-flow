@@ -25,10 +25,11 @@ function renderGates() {
 window.renderGates = renderGates;
 renderGates();
 document.querySelectorAll('.app-nav').forEach((button) => button.addEventListener('click', () => showScreen(button.dataset.screen)));
-document.getElementById('startRouteButton').addEventListener('click', () => showScreen('route'));
+document.getElementById('startRouteButton').addEventListener('click', () => showScreen('location'));
 document.getElementById('noticeButton').addEventListener('click', () => {
   const panel = document.getElementById('noticePanel');
   panel.hidden = !panel.hidden;
 });
+document.querySelectorAll('.home-return').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.getElementById('toRouteButton').addEventListener('click', () => showScreen('route'));
 document.getElementById('backToLocationButton').addEventListener('click', () => showScreen('location'));
