@@ -5,14 +5,21 @@
     <meta name="theme-color" content="#102b4e" /><meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="manifest" href="manifest.webmanifest" /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /><link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" /><link rel="stylesheet" href="style.css" /><link rel="stylesheet" href="home.css" />
     <title>Busan Port Flow</title>
   </head>
   <body class="app-body">
     <main class="app-shell">
+      <section id="homeScreen" class="app-screen active" aria-label="홈">
+        <div class="home-hero"><p>BUSAN PORT FLOW</p><h1>부산항 트럭<br />스마트 진입 안내</h1><span>현재 위치와 교통 상황을 바탕으로<br />가장 효율적인 게이트 경로를 안내합니다.</span></div>
+        <div class="home-visual"><span>⚓</span><b>부산항 물류 흐름 안내</b><small>TRUCK FLOW GUIDE</small></div>
+        <button id="startRouteButton" class="home-primary" type="button">최적 경로 찾기 <span>→</span></button>
+        <button id="noticeButton" class="home-secondary" type="button">게이트 운영 공지</button>
+        <div id="noticePanel" class="home-note" hidden><b>게이트 운영 공지</b><p>현재 등록된 긴급 공지사항이 없습니다.<br />게이트 점검·차단·혼잡 안내는 이곳에 표시됩니다.</p></div>
+      </section>
       <header class="app-header"><a class="brand" href="#"><span class="brand-mark">BP</span><span>BUSAN PORT<br /><strong>FLOW</strong></span></a><span class="app-live"><i></i> 실시간</span></header>
 
-      <section id="locationScreen" class="app-screen active" aria-label="내 위치 탐색">
+      <section id="locationScreen" class="app-screen" hidden aria-label="내 위치 탐색">
         <div class="app-title"><p>STEP 1</p><h1>현재 위치를<br />확인하세요</h1><span>내 위치를 기준으로 가장 빠른 게이트를 찾습니다.</span></div>
         <div class="location-map-wrap"><div id="driverMap" aria-label="현재 위치와 부산항 게이트 지도"></div><div class="map-location-caption"><b>부산항 게이트</b><small>지도를 눌러 출발 위치를 직접 설정할 수 있어요</small></div><button id="locationButton" class="main-location-button" type="button">◎ 내 위치 탐색하기</button></div>
         <p id="driverMapHint" class="location-hint">버튼을 누르고 위치 권한을 허용하세요. 또는 지도에서 출발 위치를 직접 누를 수 있어요.</p>
@@ -22,7 +29,7 @@
       <section id="routeScreen" class="app-screen" hidden aria-label="추천 경로">
         <div class="app-title route-title"><p>STEP 2</p><h1>추천<br />게이트 경로</h1><span>실시간 이동시간과 예상 게이트 대기시간을 함께 계산합니다.</span></div>
         <div id="routeMap" class="route-map" aria-label="추천 경로 지도"></div>
-        <article class="route-result-card"><p>가장 빠른 선택</p><h2 id="recommendationTitle">내 위치를 먼저 확인하세요</h2><p id="routeResult">첫 화면에서 내 위치 탐색하기를 눌러주세요.</p></article>
+        <p id="routeResult" hidden></p><h2 id="recommendationTitle" hidden></h2>
         <div id="gateCards" class="app-gate-list"></div>
         <div class="route-actions"><input id="originInput" value="129.045,35.105" aria-label="출발지 좌표" /><button id="routeSearchButton" type="button">실시간 경로 계산</button></div>
         <button id="backToLocationButton" class="back-screen-button" type="button">← 내 위치 다시 찾기</button>
