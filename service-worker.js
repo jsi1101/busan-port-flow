@@ -1,4 +1,4 @@
-const CACHE = 'busan-port-flow-v4';
+const CACHE = 'busan-port-flow-v5';
 const ASSETS = ['/', '/index.html', '/style.css', '/script.js', '/map-service.js', '/data-service.js', '/route-service.js', '/manifest.webmanifest', '/icon.svg'];
 
 self.addEventListener('install', (event) => {
