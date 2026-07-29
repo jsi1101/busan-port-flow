@@ -43,13 +43,30 @@ function renderReports() {
   document.getElementById('reportFeed').innerHTML = getReports().map((report) => `<article style="padding-top:11px;border-top:1px solid #e5ebf1"><b style="display:block;font-size:14px;color:#102b4e">${report.message}</b><small style="display:block;margin-top:4px;color:#68778a">부산항 이용 기사 · ${report.time}</small></article>`).join('');
 }
 document.getElementById('reportButton').addEventListener('click', () => showScreen('report'));
+let selectedReportGate = '';
+let selectedReportType = '';
+document.querySelectorAll('.report-gate').forEach((button) => button.addEventListener('click', () => {
+  selectedReportGate = button.dataset.gate;
+  document.querySelectorAll('.report-gate').forEach((item) => { item.style.background = '#fff'; item.style.color = '#102b4e'; item.style.borderColor = '#cbd7e3'; });
+  button.style.background = '#eaf5ff'; button.style.color = '#1576d2'; button.style.borderColor = '#1576d2';
+}));
 document.querySelectorAll('.report-type').forEach((button) => button.addEventListener('click', () => {
+  selectedReportType = button.dataset.report;
+  document.querySelectorAll('.report-type').forEach((item) => { item.style.background = '#fff'; item.style.color = '#102b4e'; item.style.borderColor = '#cbd7e3'; });
+  button.style.background = '#fff4e5'; button.style.color = '#9a5700'; button.style.borderColor = '#e8ae52';
+  document.getElementById('customReportInput').style.display = selectedReportType === '기타' ? 'block' : 'none';
+}));
+document.getElementById('submitReportButton').addEventListener('click', () => {
+  const custom = document.getElementById('customReportInput').value.trim();
+  if (!selectedReportGate) { alert('먼저 게이트를 선택하세요.'); return; }
+  if (!selectedReportType) { alert('제보할 상황을 선택하세요.'); return; }
+  if (selectedReportType === '기타' && !custom) { alert('기타 상황을 입력하세요.'); return; }
   const reports = getReports();
-  reports.unshift({ message: button.dataset.report, time: '방금 전' });
+  reports.unshift({ message: `[${selectedReportGate}] ${selectedReportType === '기타' ? custom : selectedReportType}`, time: '방금 전' });
   localStorage.setItem('busanPortReports', JSON.stringify(reports.slice(0, 6)));
   renderReports();
   alert('현장 제보가 등록되었습니다. 다른 기사에게 공유됩니다.');
-}));
+});
 document.querySelectorAll('.home-return').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.getElementById('toRouteButton').addEventListener('click', () => showScreen('route'));
 document.getElementById('backToLocationButton').addEventListener('click', () => showScreen('location'));
