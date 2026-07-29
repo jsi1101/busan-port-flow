@@ -15,6 +15,21 @@
         <div class="home-visual" style="box-shadow:0 7px 22px #17395c24"><span>⚓</span><b>부산항 물류 흐름 안내</b><small>TRUCK FLOW GUIDE</small></div>
         <button id="startRouteButton" class="next-screen-button" type="button">최적 경로 찾기 <span>→</span></button>
         <button id="noticeButton" class="back-screen-button" type="button" style="margin-top:10px">게이트 운영 공지</button>
+        <button id="reportButton" class="back-screen-button" type="button" style="margin-top:10px;background:#fff4e5;color:#9a5700">⚑ 현장 제보</button>
+      </section>
+      <section id="reportScreen" class="app-screen" hidden aria-label="현장 제보">
+        <div class="app-title"><p>FIELD REPORT</p><h1>현장 제보</h1><span>도로와 게이트의 상황을 동료 기사에게 빠르게 알려주세요.</span></div>
+        <div style="margin-top:24px;padding:18px;border-radius:18px;background:#fff;border:1px solid #dfe7ef">
+          <b style="display:block;font-size:17px;color:#102b4e">어떤 상황인가요?</b>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px">
+            <button class="report-type" data-report="게이트 앞 대기줄이 도로까지 늘어났어요" type="button">🚚 대기줄 과다</button>
+            <button class="report-type" data-report="진입로 사고·고장 차량이 있어요" type="button">⚠ 사고·고장</button>
+            <button class="report-type" data-report="진입로 공사 또는 통제가 있어요" type="button">🚧 공사·통제</button>
+            <button class="report-type" data-report="도로 흐름이 원활해졌어요" type="button">✓ 흐름 원활</button>
+          </div>
+        </div>
+        <div style="margin-top:17px;padding:18px;border-radius:18px;background:#fff;border:1px solid #dfe7ef"><b style="font-size:17px;color:#102b4e">최근 현장 제보</b><div id="reportFeed" style="display:grid;gap:11px;margin-top:14px"></div></div>
+        <button class="back-screen-button home-return" type="button">⌂ 홈으로</button>
       </section>
       <section id="noticeScreen" class="app-screen" hidden aria-label="게이트 운영 공지">
         <div class="app-title"><p>GATE NOTICE</p><h1>게이트<br />운영 공지</h1><span>출발 전 게이트별 운영 정보를 확인하세요.</span></div>
