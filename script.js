@@ -35,6 +35,33 @@ document.querySelectorAll('.home-return').forEach((button) => button.onclick = (
 const defaultReports = [{ message: '[BPT 신선대부두] 진입로 대기줄이 길어지고 있습니다.', time: '7분 전' },{ message: '[BPT 감만부두] 게이트 앞 도로 흐름이 원활합니다.', time: '18분 전' }];
 function getReports() { return JSON.parse(localStorage.getItem('busanPortReports') || 'null') || defaultReports; }
 function renderReports() { document.getElementById('reportFeed').innerHTML = getReports().map((report) => `<article style="padding-top:11px;border-top:1px solid #e5ebf1"><b style="display:block;font-size:14px;color:#102b4e">${report.message}</b><small style="display:block;margin-top:4px;color:#68778a">부산항 이용 기사 · ${report.time}</small></article>`).join(''); }
+function relativeReportTime(reportedAt, fallback) {
+  if (!reportedAt) return fallback || '\ucd5c\uadfc';
+  const minutes = Math.max(0, Math.floor((Date.now() - reportedAt) / 60000));
+  if (minutes < 1) return '\ubc29\uae08 \uc804';
+  if (minutes < 60) return `${minutes}\ubd84 \uc804`;
+  if (minutes < 1440) return `${Math.floor(minutes / 60)}\uc2dc\uac04 \uc804`;
+  return `${Math.floor(minutes / 1440)}\uc77c \uc804`;
+}
+setTimeout(() => {
+  renderReports = () => {
+    document.getElementById('reportFeed').innerHTML = getReports().map((report) =>
+      `<article style="padding-top:11px;border-top:1px solid #e5ebf1"><b style="display:block;font-size:14px;color:#102b4e">${report.message}</b><small style="display:block;margin-top:4px;color:#68778a">\ucd5c\uadfc \ud604\uc7a5 \uc81c\ubcf4 \u00b7 ${relativeReportTime(report.reportedAt, report.time)}</small></article>`
+    ).join('');
+  };
+  document.getElementById('submitReportButton').onclick = () => {
+    const custom = document.getElementById('customReportInput').value.trim();
+    const isOther = selectedReportType === '\uae30\ud0c0';
+    if (!selectedReportGate || !selectedReportType || (isOther && !custom)) return alert('\uac8c\uc774\ud2b8\uc640 \uc0c1\ud669\uc744 \uc120\ud0dd\ud55c \ud6c4 \uc81c\ubcf4\ub97c \ub4f1\ub85d\ud574 \uc8fc\uc138\uc694.');
+    const reports = getReports();
+    reports.unshift({ message: `[${selectedReportGate}] ${isOther ? custom : selectedReportType}`, reportedAt: Date.now() });
+    localStorage.setItem('busanPortReports', JSON.stringify(reports.slice(0, 6)));
+    renderReports();
+    alert('\ud604\uc7a5 \uc81c\ubcf4\uac00 \ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4.');
+  };
+  renderReports();
+  setInterval(() => { if (!document.getElementById('reportScreen').hidden) renderReports(); }, 30000);
+}, 0);
 let selectedReportGate = '', selectedReportType = '';
 document.querySelectorAll('.report-gate').forEach((button) => button.onclick = () => { selectedReportGate = button.dataset.gate; document.querySelectorAll('.report-gate').forEach((item) => item.style.cssText=''); button.style.cssText='background:#eaf5ff;color:#1576d2;border-color:#1576d2'; });
 document.querySelectorAll('.report-type').forEach((button) => button.onclick = () => { selectedReportType = button.dataset.report; document.getElementById('customReportInput').style.display = selectedReportType === '기타' ? 'block' : 'none'; });
